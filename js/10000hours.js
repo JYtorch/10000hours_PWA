@@ -89,7 +89,7 @@ const messaging = firebase.messaging();
 messaging
   .requestPermission()
   .then(() => {
-    message.innerHTML = "Notifications allowed";
+//     message.innerHTML = "Notifications allowed";
     return messaging.getToken();
   })
   .then(token => {
