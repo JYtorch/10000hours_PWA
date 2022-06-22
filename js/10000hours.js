@@ -89,8 +89,10 @@ const messaging = firebase.messaging();
 messaging
   .requestPermission()
   .then(() => {
+	const user_token = messaging.getToken();
+	alert(user_token);
 //     message.innerHTML = "Notifications allowed";
-    return messaging.getToken();
+    return user_token;
   })
   .then(token => {
     alert(token)
