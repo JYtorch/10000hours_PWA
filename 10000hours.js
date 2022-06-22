@@ -6,6 +6,13 @@ const closeButton = document.querySelector(".close_btn");
 const shareButton = document.querySelector(".share_btn");
 const loading = document.querySelector(".result_loading");
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    // navigator.serviceWorker.register("/flutter_service_worker.js");
+    navigator.serviceWorker.register("/firebase-messaging-sw.js");
+  });
+}
+
 function calculator() {
     const fieldValue = document.querySelector("#field_value");
     let timeValue = document.querySelector("#time_value");
