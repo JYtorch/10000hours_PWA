@@ -71,3 +71,38 @@ shareButton.addEventListener('click', copyUrl);
 openButton.addEventListener("click", openModal);
 closeButton.addEventListener("click", closeModal);
 startButton.addEventListener("click", calculator);
+
+const config = {
+  apiKey: '${{ secrets.API_KEY }}',
+  authDomain: '${{ secrets.AUTH_DOMAIN }}',
+  projectId: '${{ secrets.PROJECT_ID }}',
+  storageBucket: '${{ secrets.STORAGE_BUCKET }}',
+  messagingSenderId: '${{ secrets.MESSAGING_SENDER_ID }}',
+  appId: '${{ secrets.APP_ID }}',
+  measurementId: '${{ secrets.MEASUREMENT_ID }}',     
+};
+
+firebase.initializeApp(config);
+
+const messaging = firebase.messaging();
+// console.log(messaging)
+messaging
+  .requestPermission()
+  .then(() => {
+    message.innerHTML = "Notifications allowed";
+    return messaging.getToken();
+  })
+  .then(token => {
+    alert(token)
+    // tokenString.innerHTML = "Token Is : " + token;
+  })
+  .catch(err => {
+    alert(err)
+    // errorMessage.innerHTML = errorMessage.innerHTML + "; " + err;
+    console.log("No permission to send push", err);
+  });
+
+messaging.onMessage(payload => {
+  console.log("Message received. ", payload);
+  const { title, ...options } = payload.notification;
+});
