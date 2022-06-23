@@ -83,25 +83,28 @@ firebase.initializeApp(config);
 
 const messaging = firebase.messaging();
 // console.log(messaging)
-navigator.serviceWorker.register('https://jytorch.github.io/10000hours_PWA/firebase-messaging-sw.js')
-      .then((registration) => {
-	  console.log(registration)
-	  messaging.useServiceWorker(registration);
-	  // Request permission and get token.....
-      });
+// navigator.serviceWorker.register('https://jytorch.github.io/10000hours_PWA/firebase-messaging-sw.js')
+//       .then((registration) => {
+// 	  console.log(registration)
+// 	  messaging.useServiceWorker(registration);
+// 	  // Request permission and get token.....
+//       });
 messaging
   .requestPermission()
   .then(() => {
 	const user_token = messaging.getToken();
+	console.log('PREV_LEV', DEFAULT_SW_PATH, DEFAULT_SW_SCOPE)
 	alert(user_token);
 //     message.innerHTML = "Notifications allowed";
     return user_token;
   })
   .then(token => {
+    console.log('OK', DEFAULT_SW_PATH, DEFAULT_SW_SCOPE)
     alert(token)
     // tokenString.innerHTML = "Token Is : " + token;
   })
   .catch(err => {
+    console.log('ERR', DEFAULT_SW_PATH, DEFAULT_SW_SCOPE)
     alert(err)
     // errorMessage.innerHTML = errorMessage.innerHTML + "; " + err;
     console.log("No permission to send push", err);
