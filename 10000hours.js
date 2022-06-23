@@ -124,7 +124,8 @@ const messaging = firebase.messaging();
 messaging
   .requestPermission()
   .then(() => {
-	const user_token = messaging.getToken({serviceWorkerRegistration: swRegistration, vapidKey: '${{secrets.VAPID_KEY}}');	
+	console.log('등록된 Service Worker', swRegistration, vapidKey: '${{secrets.VAPID_KEY}}')
+	const user_token = messaging.getToken({serviceWorkerRegistration: swRegistration, vapidKey: '${{secrets.VAPID_KEY}}'});	
 	alert(user_token);
 //     message.innerHTML = "Notifications allowed";
     return user_token;
