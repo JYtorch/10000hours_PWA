@@ -89,7 +89,6 @@ const messaging = firebase.messaging();
 // 	  messaging.useServiceWorker(registration);
 // 	  // Request permission and get token.....
 //       });
-console.log('PATH', DEFAULT_SW_PATH, DEFAULT_SW_SCOPE)
 
 messaging
   .requestPermission()
