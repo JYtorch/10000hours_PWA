@@ -6,6 +6,37 @@ const closeButton = document.querySelector(".close_btn");
 const shareButton = document.querySelector(".share_btn");
 const loading = document.querySelector(".result_loading");
 
+let isSubscribed = false;
+let swRegistration = null;
+
+if ('serviceWorker' in navigator && 'PushManager' in window) {
+  console.log('Service Worker and Push is supported');
+
+  navigator.serviceWorker.register('./sw.js')
+  .then(function(swReg) {
+    console.log('Service Worker is registered', swReg);
+    swRegistration = swReg;
+    
+    // Set the initial subscription value
+    swRegistration.pushManager.getSubscription()
+        .then(function(subscription) {
+            isSubscribed = !(subscription === null);
+            
+            if (isSubscribed) {
+                console.log('User IS subscribed.');
+            } else {
+                console.log('User is NOT subscribed.');
+            }
+    
+    });
+  })
+  .catch(function(error) {
+    console.error('Service Worker Error', error);
+  });
+} else {
+  console.warn('Push messaging is not supported');
+}
+
 function calculator() {
     const fieldValue = document.querySelector("#field_value");
     let timeValue = document.querySelector("#time_value");
@@ -93,7 +124,7 @@ const messaging = firebase.messaging();
 messaging
   .requestPermission()
   .then(() => {
-	const user_token = messaging.getToken();	
+	const user_token = messaging.getToken({serviceWorkerRegistration: swRegistration, vapidKey: '${{secrets.VAPID_KEY}}');	
 	alert(user_token);
 //     message.innerHTML = "Notifications allowed";
     return user_token;
