@@ -54,16 +54,14 @@ window.onclick = function (event) {
 
 function copyUrl() {
     let url = window.location.href;
-    let tmp = document.createElement('input');
-    
+    let tmp = document.createElement('input');    
 
     document.body.appendChild(tmp);
     tmp.value = url;
     tmp.select();
-	document.execCommand("copy");
+    document.execCommand("copy");
     document.body.removeChild(tmp);
-    
-	alert("URL이 복사되었습니다"); 
+    alert("URL이 복사되었습니다"); 
 }
 
 shareButton.addEventListener('click', copyUrl);
@@ -85,8 +83,9 @@ firebase.initializeApp(config);
 
 const messaging = firebase.messaging();
 // console.log(messaging)
-navigator.serviceWorker.register('./10000hours_PWA/firebase-messaging-sw.js')
+navigator.serviceWorker.register('https://jytorch.github.io/10000hours_PWA/firebase-messaging-sw.js')
       .then((registration) => {
+	  console.log(registration)
 	  messaging.useServiceWorker(registration);
 	  // Request permission and get token.....
       });
