@@ -5,70 +5,92 @@ const openButton = document.querySelector(".modal_btn");
 const closeButton = document.querySelector(".close_btn");
 const shareButton = document.querySelector(".share_btn");
 const loading = document.querySelector(".result_loading");
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.8.2/firebase-app.js';
+import { getMessaging, getToken } from 'https://www.gstatic.com/firebasejs/9.8.2/firebase-messaging.js';
+// TODO: Replace the following with your app's Firebase project configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyC4kLvzm70vYYJC8BDoF0Dp3QfoScs2oJ0",
+      authDomain: "hours-push.firebaseapp.com",
+      projectId: "hours-push",
+      storageBucket: "hours-push.appspot.com",
+      messagingSenderId: "155240921444",
+      appId: "1:155240921444:web:4a0b66889e4c822dec6271",
+      measurementId: "G-98ML1QR89N"
+    };
 
-let isSubscribed = false;
-let swRegistration = null;
-
-if ('serviceWorker' in navigator && 'PushManager' in window) {
-  console.log('Service Worker and Push is supported');
-
-  navigator.serviceWorker.register('./sw.js')
-  .then(function(swReg) {
-    console.log('Service Worker is registered', swReg);
-    swRegistration = swReg;
-    const config = {
-	  apiKey: '${{ secrets.API_KEY }}',
-	  authDomain: '${{ secrets.AUTH_DOMAIN }}',
-	  projectId: '${{ secrets.PROJECT_ID }}',
-	  storageBucket: '${{ secrets.STORAGE_BUCKET }}',
-	  messagingSenderId: '${{ secrets.MESSAGING_SENDER_ID }}',
-	  appId: '${{ secrets.APP_ID }}',
-	  measurementId: '${{ secrets.MEASUREMENT_ID }}',
-	};
-
-	firebase.initializeApp(config);
-
-	const messaging = firebase.messaging();
-	messaging
-	  .requestPermission()
-	  .then(() => {
-		console.log('등록된 Service Worker:', swRegistration, 'vapidKey:', '${{secrets.VAPID_KEY}}')
-		const user_token = messaging.getToken({serviceWorkerRegistration: swRegistration, vapidKey: '${{secrets.VAPID_KEY}}'});	
-		alert(user_token);
-	    return user_token;
-	  })
-	  .then(token => {
-	    alert(token)
-	  })
-	  .catch(err => {
-	    alert(err)
-	    console.log("No permission to send push", err);
-	  });
-
-	messaging.onMessage(payload => {
-	  console.log("Message received. ", payload);
-	  const { title, ...options } = payload.notification;
-	});
-	  
-    // Set the initial subscription value
-    swRegistration.pushManager.getSubscription()
-        .then(function(subscription) {
-            isSubscribed = !(subscription === null);
-            
-            if (isSubscribed) {
-                console.log('User IS subscribed.');
-            } else {
-                console.log('User is NOT subscribed.');
-            }
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);            
     
-    });
-  })
-  .catch(function(error) {
-    console.error('Service Worker Error', error);
-  });
-} else {
-  console.warn('Push messaging is not supported');
-}
+    async function getUserToken () {
+        const messaging = await getMessaging(app);
+        
+        const token = await getToken(messaging, { vapidKey: "BEqB-tFJ0QLv_xKP1bL2v3f2uT-ToExLHDA80-HbjAi_cMCsXWhz-7bwZRdiLRXFebpK7arO4-ntYoXyaeW-2Z0" })  
+        alert(token)
+    }
+getUserToken()
+// let isSubscribed = false;
+// let swRegistration = null;
+
+// if ('serviceWorker' in navigator && 'PushManager' in window) {
+//   console.log('Service Worker and Push is supported');
+
+//   navigator.serviceWorker.register('./sw.js')
+//   .then(function(swReg) {
+//     console.log('Service Worker is registered', swReg);
+//     swRegistration = swReg;
+//     const config = {
+// 	  apiKey: '${{ secrets.API_KEY }}',
+// 	  authDomain: '${{ secrets.AUTH_DOMAIN }}',
+// 	  projectId: '${{ secrets.PROJECT_ID }}',
+// 	  storageBucket: '${{ secrets.STORAGE_BUCKET }}',
+// 	  messagingSenderId: '${{ secrets.MESSAGING_SENDER_ID }}',
+// 	  appId: '${{ secrets.APP_ID }}',
+// 	  measurementId: '${{ secrets.MEASUREMENT_ID }}',
+// 	};
+
+// 	firebase.initializeApp(config);
+
+// 	const messaging = firebase.messaging();
+// 	messaging
+// 	  .requestPermission()
+// 	  .then(() => {
+// 		console.log('등록된 Service Worker:', swRegistration, 'vapidKey:', '${{secrets.VAPID_KEY}}')
+// 		const user_token = messaging.getToken({serviceWorkerRegistration: swRegistration, vapidKey: '${{secrets.VAPID_KEY}}'});	
+// 		alert(user_token);
+// 	    return user_token;
+// 	  })
+// 	  .then(token => {
+// 	    alert(token)
+// 	  })
+// 	  .catch(err => {
+// 	    alert(err)
+// 	    console.log("No permission to send push", err);
+// 	  });
+
+// 	messaging.onMessage(payload => {
+// 	  console.log("Message received. ", payload);
+// 	  const { title, ...options } = payload.notification;
+// 	});
+	  
+//     // Set the initial subscription value
+//     swRegistration.pushManager.getSubscription()
+//         .then(function(subscription) {
+//             isSubscribed = !(subscription === null);
+            
+//             if (isSubscribed) {
+//                 console.log('User IS subscribed.');
+//             } else {
+//                 console.log('User is NOT subscribed.');
+//             }
+    
+//     });
+//   })
+//   .catch(function(error) {
+//     console.error('Service Worker Error', error);
+//   });
+// } else {
+//   console.warn('Push messaging is not supported');
+// }
 
 function calculator() {
     const fieldValue = document.querySelector("#field_value");
