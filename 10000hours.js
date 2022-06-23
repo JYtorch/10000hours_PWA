@@ -16,7 +16,40 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
   .then(function(swReg) {
     console.log('Service Worker is registered', swReg);
     swRegistration = swReg;
-    
+    const config = {
+	  apiKey: '${{ secrets.API_KEY }}',
+	  authDomain: '${{ secrets.AUTH_DOMAIN }}',
+	  projectId: '${{ secrets.PROJECT_ID }}',
+	  storageBucket: '${{ secrets.STORAGE_BUCKET }}',
+	  messagingSenderId: '${{ secrets.MESSAGING_SENDER_ID }}',
+	  appId: '${{ secrets.APP_ID }}',
+	  measurementId: '${{ secrets.MEASUREMENT_ID }}',
+	};
+
+	firebase.initializeApp(config);
+
+	const messaging = firebase.messaging();
+	messaging
+	  .requestPermission()
+	  .then(() => {
+		console.log('등록된 Service Worker:', swRegistration, 'vapidKey:', '${{secrets.VAPID_KEY}}')
+		const user_token = messaging.getToken({serviceWorkerRegistration: swRegistration, vapidKey: '${{secrets.VAPID_KEY}}'});	
+		alert(user_token);
+	    return user_token;
+	  })
+	  .then(token => {
+	    alert(token)
+	  })
+	  .catch(err => {
+	    alert(err)
+	    console.log("No permission to send push", err);
+	  });
+
+	messaging.onMessage(payload => {
+	  console.log("Message received. ", payload);
+	  const { title, ...options } = payload.notification;
+	});
+	  
     // Set the initial subscription value
     swRegistration.pushManager.getSubscription()
         .then(function(subscription) {
@@ -100,47 +133,47 @@ openButton.addEventListener("click", openModal);
 closeButton.addEventListener("click", closeModal);
 startButton.addEventListener("click", calculator);
 
-const config = {
-  apiKey: '${{ secrets.API_KEY }}',
-  authDomain: '${{ secrets.AUTH_DOMAIN }}',
-  projectId: '${{ secrets.PROJECT_ID }}',
-  storageBucket: '${{ secrets.STORAGE_BUCKET }}',
-  messagingSenderId: '${{ secrets.MESSAGING_SENDER_ID }}',
-  appId: '${{ secrets.APP_ID }}',
-  measurementId: '${{ secrets.MEASUREMENT_ID }}',
-};
+// const config = {
+//   apiKey: '${{ secrets.API_KEY }}',
+//   authDomain: '${{ secrets.AUTH_DOMAIN }}',
+//   projectId: '${{ secrets.PROJECT_ID }}',
+//   storageBucket: '${{ secrets.STORAGE_BUCKET }}',
+//   messagingSenderId: '${{ secrets.MESSAGING_SENDER_ID }}',
+//   appId: '${{ secrets.APP_ID }}',
+//   measurementId: '${{ secrets.MEASUREMENT_ID }}',
+// };
 
-firebase.initializeApp(config);
+// firebase.initializeApp(config);
 
-const messaging = firebase.messaging();
-// console.log(messaging)
-// navigator.serviceWorker.register('https://jytorch.github.io/10000hours_PWA/firebase-messaging-sw.js')
-//       .then((registration) => {
-// 	  console.log(registration)
-// 	  messaging.useServiceWorker(registration);
-// 	  // Request permission and get token.....
-//       });
+// const messaging = firebase.messaging();
+// // console.log(messaging)
+// // navigator.serviceWorker.register('https://jytorch.github.io/10000hours_PWA/firebase-messaging-sw.js')
+// //       .then((registration) => {
+// // 	  console.log(registration)
+// // 	  messaging.useServiceWorker(registration);
+// // 	  // Request permission and get token.....
+// //       });
 
-messaging
-  .requestPermission()
-  .then(() => {
-	console.log('등록된 Service Worker:', swRegistration, 'vapidKey:', '${{secrets.VAPID_KEY}}')
-	const user_token = messaging.getToken({serviceWorkerRegistration: swRegistration, vapidKey: '${{secrets.VAPID_KEY}}'});	
-	alert(user_token);
-//     message.innerHTML = "Notifications allowed";
-    return user_token;
-  })
-  .then(token => {
-    alert(token)
-    // tokenString.innerHTML = "Token Is : " + token;
-  })
-  .catch(err => {
-    alert(err)
-    // errorMessage.innerHTML = errorMessage.innerHTML + "; " + err;
-    console.log("No permission to send push", err);
-  });
+// messaging
+//   .requestPermission()
+//   .then(() => {
+// 	console.log('등록된 Service Worker:', swRegistration, 'vapidKey:', '${{secrets.VAPID_KEY}}')
+// 	const user_token = messaging.getToken({serviceWorkerRegistration: swRegistration, vapidKey: '${{secrets.VAPID_KEY}}'});	
+// 	alert(user_token);
+// //     message.innerHTML = "Notifications allowed";
+//     return user_token;
+//   })
+//   .then(token => {
+//     alert(token)
+//     // tokenString.innerHTML = "Token Is : " + token;
+//   })
+//   .catch(err => {
+//     alert(err)
+//     // errorMessage.innerHTML = errorMessage.innerHTML + "; " + err;
+//     console.log("No permission to send push", err);
+//   });
 
-messaging.onMessage(payload => {
-  console.log("Message received. ", payload);
-  const { title, ...options } = payload.notification;
-});
+// messaging.onMessage(payload => {
+//   console.log("Message received. ", payload);
+//   const { title, ...options } = payload.notification;
+// });
