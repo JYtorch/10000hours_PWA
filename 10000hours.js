@@ -25,8 +25,10 @@ import { getMessaging, getToken } from 'https://www.gstatic.com/firebasejs/9.8.2
       const messaging = await getMessaging(app);
       const swReg = await navigator.serviceWorker.register('./sw.js')
       console.log('등록된 SW', swReg)
-      const token = await getToken(messaging, { vapidKey: "BEqB-tFJ0QLv_xKP1bL2v3f2uT-ToExLHDA80-HbjAi_cMCsXWhz-7bwZRdiLRXFebpK7arO4-ntYoXyaeW-2Z0", serviceWorkerRegistration: swReg})  
+      const token = await getToken(messaging, { vapidKey: "BEqB-tFJ0QLv_xKP1bL2v3f2uT-ToExLHDA80-HbjAi_cMCsXWhz-7bwZRdiLRXFebpK7arO4-ntYoXyaeW-2Z0", serviceWorkerRegistration: swReg })  
+      document.querySelector('#token').innerText = token
       alert(token)
+
     }
 getUserToken()
 // let isSubscribed = false;
