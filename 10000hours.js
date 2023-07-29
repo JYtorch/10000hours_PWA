@@ -23,10 +23,33 @@ alert('JS start!')
     const app = initializeApp(firebaseConfig);            
     
     async function getUserToken () {
+        
       const messaging = await getMessaging(app);
-      const swReg = await navigator.serviceWorker.register('./sw.js')
-      console.log('등록된 SW', swReg)
-      const token = await getToken(messaging, { vapidKey: "BEqB-tFJ0QLv_xKP1bL2v3f2uT-ToExLHDA80-HbjAi_cMCsXWhz-7bwZRdiLRXFebpK7arO4-ntYoXyaeW-2Z0", serviceWorkerRegistration: swReg })  
+      
+      if ("serviceWorker" in navigator) {
+        alert("serviceWorker is in navigator!")        
+      }
+      const swReg = await navigator.serviceWorker.register('./sw.js')            
+      alert('등록된 SW', swReg)
+    //   if (Notification.permission != "granted") {
+    //     console.log('Requesting permission...');
+    //     Notification.requestPermission().then((permission) => {
+    //       if (permission === 'granted') {
+    //         alert('Notification permission granted.')
+    //       }
+    //       else {
+    //         alert("Notification permission failed.")
+    //       }  
+    //     });
+    //   }
+      let token
+      try {
+        token = await getToken(messaging, { vapidKey: "BEqB-tFJ0QLv_xKP1bL2v3f2uT-ToExLHDA80-HbjAi_cMCsXWhz-7bwZRdiLRXFebpK7arO4-ntYoXyaeW-2Z0", serviceWorkerRegistration: swReg })  
+      } catch (err) {        
+        alert(err)
+      }
+      
+      
       if (token) {
         document.querySelector('#token').innerText = token
         alert(token)
